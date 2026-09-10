@@ -1,15 +1,38 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import './App.css';
+import './App.css'
 
 const API_KEY = import.meta.env.VITE_NASA_API_KEY
 
-const truncate = (text, limit) => {
-  if (!text) return ''
-  return text.length > limit ? text.slice(0, limit - 3) + '...' : text
+type Todo = {
+  id: number
+  text: string
+  completed: boolean
 }
 
-const defaultShortcuts = [
+type Shortcut = {
+  id: number
+  name: string
+  url: string
+}
+
+type NasaItem = {
+  date: string
+  url: string
+  title: string
+  explanation: string
+  media_type: string
+  hdurl?: string
+}
+
+const truncate = (text: string, limit: number): string => {
+  if (!text) return ''
+  return text.length > limit
+    ? text.slice(0, limit - 3) + '...'
+    : text
+}
+
+const defaultShortcuts: Shortcut[] = [
   { id: 1, name: 'Google', url: 'https://www.google.com' },
   { id: 2, name: 'GitHub', url: 'https://github.com' },
   { id: 3, name: 'Stardance', url: 'https://stardance.hackclub.com' },
@@ -22,37 +45,46 @@ const defaultShortcuts = [
 
 function App() {
   const navigate = useNavigate()
-  const [time, setTime] = useState(new Date())
-  const [search, setSearch] = useState('')
-  const [suggestions, setSuggestions] = useState([])
-  const [news, setNews] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
 
-  const [todos, setTodos] = useState(() => {
+  const [time, setTime] = useState<Date>(new Date())
+  const [search, setSearch] = useState<string>('')
+  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [news, setNews] = useState<NasaItem[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<boolean>(false)
+
+  const [todos, setTodos] = useState<Todo[]>(() => {
     try {
-      return JSON.parse(localStorage.getItem('todos')) || []
+      const savedTodos = localStorage.getItem('todos')
+      return savedTodos ? JSON.parse(savedTodos) : []
     } catch {
       return []
     }
   })
 
-  const [shortcuts, setShortcuts] = useState(() => {
+  const [shortcuts, setShortcuts] = useState<Shortcut[]>(() => {
     try {
-      return JSON.parse(localStorage.getItem('shortcuts')) || defaultShortcuts
+      const savedShortcuts = localStorage.getItem('shortcuts')
+      return savedShortcuts
+        ? JSON.parse(savedShortcuts)
+        : defaultShortcuts
     } catch {
       return defaultShortcuts
     }
   })
 
-
-  const [todoInput, setTodoInput] = useState('')
-  const [shortcutInput, setShortcutInput] = useState('')
-  const [showShortcutInput, setShowShortcutInput] = useState(false)
-  const [editingShortcuts, setEditingShortcuts] = useState(false)
+  const [todoInput, setTodoInput] = useState<string>('')
+  const [shortcutInput, setShortcutInput] = useState<string>('')
+  const [showShortcutInput, setShowShortcutInput] =
+    useState<boolean>(false)
+  const [editingShortcuts, setEditingShortcuts] =
+    useState<boolean>(false)
 
   useEffect(() => {
-    const interval = setInterval(() => setTime(new Date()), 1000)
+    const interval = setInterval(() => {
+      setTime(new Date())
+    }, 1000)
+
     return () => clearInterval(interval)
   }, [])
 
@@ -64,28 +96,34 @@ function App() {
     localStorage.setItem('shortcuts', JSON.stringify(shortcuts))
   }, [shortcuts])
 
-
-
   useEffect(() => {
-    const fetchNews = async () => {
+    const fetchNews = async (): Promise<void> => {
       try {
         const today = new Date()
         const end = today.toISOString().split('T')[0]
+
         const startDate = new Date(today)
         startDate.setDate(today.getDate() - 7)
+
         const start = startDate.toISOString().split('T')[0]
 
         const response = await fetch(
           `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&start_date=${start}&end_date=${end}`
         )
 
-        if (!response.ok) throw new Error('NASA API error')
+        if (!response.ok) {
+          throw new Error('NASA API error')
+        }
 
-        const data = await response.json()
+        const data: NasaItem[] = await response.json()
 
         const filtered = data
-          .filter(item => item.media_type === 'image')
-          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .filter((item: NasaItem) => item.media_type === 'image')
+          .sort(
+            (a: NasaItem, b: NasaItem) =>
+              new Date(b.date).getTime() -
+              new Date(a.date).getTime()
+          )
           .slice(0, 2)
 
         setNews(filtered)
@@ -99,14 +137,14 @@ function App() {
     fetchNews()
   }, [])
 
-  const formatDate = () => {
+  const formatDate = (): string => {
     return time.toLocaleDateString('en-US', {
       day: 'numeric',
       month: 'short'
     })
   }
 
-  const formatTime = () => {
+  const formatTime = (): string => {
     return time.toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: '2-digit',
@@ -114,13 +152,17 @@ function App() {
     })
   }
 
-  const handleSearch = (e) => {
+  const handleSearch = (
+    e: React.FormEvent<HTMLFormElement>
+  ): void => {
     e.preventDefault()
 
     if (!search.trim()) return
 
     window.open(
-      `https://www.google.com/search?q=${encodeURIComponent(search.trim())}`,
+      `https://www.google.com/search?q=${encodeURIComponent(
+        search.trim()
+      )}`,
       '_blank'
     )
 
@@ -128,7 +170,9 @@ function App() {
     setSuggestions([])
   }
 
-  const handleSearchChange = async (e) => {
+  const handleSearchChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): Promise<void> => {
     const value = e.target.value
     setSearch(value)
 
@@ -139,29 +183,31 @@ function App() {
 
     try {
       const response = await fetch(
-        `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(value)}`
+        `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(
+          value
+        )}`
       )
 
-      const data = await response.json()
+      const data: [string, string[]] = await response.json()
       setSuggestions(data[1].slice(0, 6))
     } catch {
       setSuggestions([])
     }
   }
 
-  const selectSuggestion = (suggestion) => {
+  const selectSuggestion = (suggestion: string): void => {
     setSearch(suggestion)
     setSuggestions([])
   }
 
-  const addTodo = (e) => {
+  const addTodo = (
+    e: React.FormEvent<HTMLFormElement>
+  ): void => {
     e.preventDefault()
 
     if (!todoInput.trim()) return
 
-
-
-    setTodos(prev => [
+    setTodos((prev: Todo[]) => [
       ...prev,
       {
         id: Date.now(),
@@ -173,9 +219,9 @@ function App() {
     setTodoInput('')
   }
 
-  const toggleTodo = (id) => {
-    setTodos(prev =>
-      prev.map(todo =>
+  const toggleTodo = (id: number): void => {
+    setTodos((prev: Todo[]) =>
+      prev.map((todo: Todo) =>
         todo.id === id
           ? { ...todo, completed: !todo.completed }
           : todo
@@ -183,11 +229,15 @@ function App() {
     )
   }
 
-  const deleteTodo = (id) => {
-    setTodos(prev => prev.filter(todo => todo.id !== id))
+  const deleteTodo = (id: number): void => {
+    setTodos((prev: Todo[]) =>
+      prev.filter((todo: Todo) => todo.id !== id)
+    )
   }
 
-  const addShortcut = (e) => {
+  const addShortcut = (
+    e: React.FormEvent<HTMLFormElement>
+  ): void => {
     e.preventDefault()
 
     if (!shortcutInput.trim()) return
@@ -201,7 +251,7 @@ function App() {
     try {
       const parsed = new URL(url)
 
-      setShortcuts(prev => [
+      setShortcuts((prev: Shortcut[]) => [
         ...prev,
         {
           id: Date.now(),
@@ -217,12 +267,16 @@ function App() {
     }
   }
 
-  const deleteShortcut = (id) => {
-    setShortcuts(prev => prev.filter(shortcut => shortcut.id !== id))
+  const deleteShortcut = (id: number): void => {
+    setShortcuts((prev: Shortcut[]) =>
+      prev.filter((shortcut: Shortcut) => shortcut.id !== id)
+    )
   }
 
-  const getFavicon = (url) => {
-    return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(url)}&sz=128`
+  const getFavicon = (url: string): string => {
+    return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(
+      url
+    )}&sz=128`
   }
 
   return (
@@ -230,12 +284,16 @@ function App() {
       <div className="browser-contaier flex-col ac">
         <div className="time-and-date flex-col as">
           <div className="date">{formatDate()}</div>
+
           <div className="Time flex ac">
             {formatTime()}
           </div>
         </div>
 
-        <form className="Searchbar flex ac" onSubmit={handleSearch}>
+        <form
+          className="Searchbar flex ac"
+          onSubmit={handleSearch}
+        >
           <div className="icon">
             <i className="bi bi-search"></i>
           </div>
@@ -250,16 +308,20 @@ function App() {
 
           {suggestions.length > 0 && (
             <div className="suggestions">
-              {suggestions.map((suggestion, index) => (
-                <div
-                  className="suggestion"
-                  key={index}
-                  onMouseDown={() => selectSuggestion(suggestion)}
-                >
-                  <i className="bi bi-search"></i>
-                  {suggestion}
-                </div>
-              ))}
+              {suggestions.map(
+                (suggestion: string, index: number) => (
+                  <div
+                    className="suggestion"
+                    key={index}
+                    onMouseDown={() =>
+                      selectSuggestion(suggestion)
+                    }
+                  >
+                    <i className="bi bi-search"></i>
+                    {suggestion}
+                  </div>
+                )
+              )}
             </div>
           )}
         </form>
@@ -282,30 +344,40 @@ function App() {
               </div>
             )}
 
-            {!loading && !error && news.map(item => (
-              <div className="Nasa-news-card flex-col as" key={item.date}>
-                <img
-                  src={item.url}
-                  alt={item.title}
-                  className="nasa-news-img"
-                />
-
-                <div className="news-title">
-                  {truncate(item.title, 80)}
-                </div>
-
-                <div className="news-context">
-                  {truncate(item.explanation, 200)}
-                </div>
-
+            {!loading &&
+              !error &&
+              news.map((item: NasaItem) => (
                 <div
-                  className="read-more"
-                  onClick={() => navigate('/nasafound', { state: { item } })}
+                  className="Nasa-news-card flex-col as"
+                  key={item.date}
                 >
-                  Read more <i className="bi bi-arrow-up-right"></i>
+                  <img
+                    src={item.url}
+                    alt={item.title}
+                    className="nasa-news-img"
+                  />
+
+                  <div className="news-title">
+                    {truncate(item.title, 80)}
+                  </div>
+
+                  <div className="news-context">
+                    {truncate(item.explanation, 200)}
+                  </div>
+
+                  <div
+                    className="read-more"
+                    onClick={() =>
+                      navigate('/nasafound', {
+                        state: { item }
+                      })
+                    }
+                  >
+                    Read more{' '}
+                    <i className="bi bi-arrow-up-right"></i>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </div>
@@ -318,14 +390,18 @@ function App() {
             <div className="flex ac g-10">
               <div
                 className="EDIT btn flex ac"
-                onClick={() => setEditingShortcuts(!editingShortcuts)}
+                onClick={() =>
+                  setEditingShortcuts(!editingShortcuts)
+                }
               >
                 <i className="bi bi-pen"></i>
               </div>
 
               <div
                 className="Add btn flex ac"
-                onClick={() => setShowShortcutInput(!showShortcutInput)}
+                onClick={() =>
+                  setShowShortcutInput(!showShortcutInput)
+                }
               >
                 <i className="bi bi-plus-lg"></i>
               </div>
@@ -333,20 +409,28 @@ function App() {
           </div>
 
           {showShortcutInput && (
-            <form className="shortcut-form" onSubmit={addShortcut}>
+            <form
+              className="shortcut-form"
+              onSubmit={addShortcut}
+            >
               <input
                 type="text"
                 placeholder="example.com"
                 value={shortcutInput}
-                onChange={(e) => setShortcutInput(e.target.value)}
+                onChange={(
+                  e: React.ChangeEvent<HTMLInputElement>
+                ) => setShortcutInput(e.target.value)}
                 autoFocus
               />
             </form>
           )}
 
           <div className="shortcut-container flex warp">
-            {shortcuts.map(shortcut => (
-              <div className="shortcut-wrapper" key={shortcut.id}>
+            {shortcuts.map((shortcut: Shortcut) => (
+              <div
+                className="shortcut-wrapper"
+                key={shortcut.id}
+              >
                 <a
                   href={shortcut.url}
                   target="_blank"
@@ -364,7 +448,9 @@ function App() {
                 {editingShortcuts && (
                   <div
                     className="shortcut-delete"
-                    onClick={() => deleteShortcut(shortcut.id)}
+                    onClick={() =>
+                      deleteShortcut(shortcut.id)
+                    }
                   >
                     <i className="bi bi-x"></i>
                   </div>
@@ -379,7 +465,10 @@ function App() {
             Todo list
           </div>
 
-          <form className="add-todo flex ac border-dd" onSubmit={addTodo}>
+          <form
+            className="add-todo flex ac border-dd"
+            onSubmit={addTodo}
+          >
             <i className="bi bi-plus-lg"></i>
 
             <input
@@ -387,13 +476,18 @@ function App() {
               className="Add-todo"
               placeholder="New task"
               value={todoInput}
-              onChange={(e) => setTodoInput(e.target.value)}
+              onChange={(
+                e: React.ChangeEvent<HTMLInputElement>
+              ) => setTodoInput(e.target.value)}
             />
           </form>
 
           <div className="todo-items">
-            {todos.map(todo => (
-              <div className="todo-list flex ac cb" key={todo.id}>
+            {todos.map((todo: Todo) => (
+              <div
+                className="todo-list flex ac cb"
+                key={todo.id}
+              >
                 <input
                   type="checkbox"
                   className="checkbox"
@@ -402,7 +496,9 @@ function App() {
                 />
 
                 <div
-                  className={`taskti ${todo.completed ? 'completed' : ''}`}
+                  className={`taskti ${
+                    todo.completed ? 'completed' : ''
+                  }`}
                   onClick={() => toggleTodo(todo.id)}
                 >
                   {todo.text}
@@ -418,7 +514,6 @@ function App() {
             ))}
           </div>
         </div>
-            
       </div>
     </div>
   )
