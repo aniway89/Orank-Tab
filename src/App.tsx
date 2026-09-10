@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './App.css';
-import SS from './assets/hero.png'
-import favicon from './assets/react.svg'
 
 const API_KEY = import.meta.env.VITE_NASA_API_KEY
 
@@ -10,7 +9,19 @@ const truncate = (text, limit) => {
   return text.length > limit ? text.slice(0, limit - 3) + '...' : text
 }
 
+const defaultShortcuts = [
+  { id: 1, name: 'Google', url: 'https://www.google.com' },
+  { id: 2, name: 'GitHub', url: 'https://github.com' },
+  { id: 3, name: 'Stardance', url: 'https://stardance.hackclub.com' },
+  { id: 4, name: 'ChatGPT', url: 'https://chatgpt.com' },
+  { id: 5, name: 'Claude', url: 'https://claude.ai' },
+  { id: 6, name: 'YouTube', url: 'https://youtube.com' },
+  { id: 7, name: 'LeetCode', url: 'https://leetcode.com' },
+  { id: 8, name: 'Discord', url: 'https://discord.com' }
+]
+
 function App() {
+  const navigate = useNavigate()
   const [time, setTime] = useState(new Date())
   const [search, setSearch] = useState('')
   const [suggestions, setSuggestions] = useState([])
@@ -28,11 +39,12 @@ function App() {
 
   const [shortcuts, setShortcuts] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem('shortcuts')) || []
+      return JSON.parse(localStorage.getItem('shortcuts')) || defaultShortcuts
     } catch {
-      return []
+      return defaultShortcuts
     }
   })
+
 
   const [todoInput, setTodoInput] = useState('')
   const [shortcutInput, setShortcutInput] = useState('')
@@ -52,6 +64,8 @@ function App() {
     localStorage.setItem('shortcuts', JSON.stringify(shortcuts))
   }, [shortcuts])
 
+
+
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -68,6 +82,7 @@ function App() {
         if (!response.ok) throw new Error('NASA API error')
 
         const data = await response.json()
+
         const filtered = data
           .filter(item => item.media_type === 'image')
           .sort((a, b) => new Date(b.date) - new Date(a.date))
@@ -143,6 +158,8 @@ function App() {
     e.preventDefault()
 
     if (!todoInput.trim()) return
+
+
 
     setTodos(prev => [
       ...prev,
@@ -265,7 +282,7 @@ function App() {
               </div>
             )}
 
-            {!loading && !error && news.map((item, index) => (
+            {!loading && !error && news.map(item => (
               <div className="Nasa-news-card flex-col as" key={item.date}>
                 <img
                   src={item.url}
@@ -281,14 +298,12 @@ function App() {
                   {truncate(item.explanation, 200)}
                 </div>
 
-                <a
-                  href={item.hdurl || item.url}
-                  target="_blank"
-                  rel="noreferrer"
+                <div
                   className="read-more"
+                  onClick={() => navigate('/nasafound', { state: { item } })}
                 >
                   Read more <i className="bi bi-arrow-up-right"></i>
-                </a>
+                </div>
               </div>
             ))}
           </div>
@@ -403,6 +418,7 @@ function App() {
             ))}
           </div>
         </div>
+            
       </div>
     </div>
   )

@@ -6,6 +6,7 @@ body{
   height: 100dvh;
   overflow: hidden;
   box-sizing: border-box;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   color: white;
   background: black;
 }
@@ -185,10 +186,12 @@ input{
 .functionable-bar{
   width:20%;
   height: 100%;
-  border: 1px solid rgba(48, 48, 48, 0.775);
+  /* border: 1px solid rgba(48, 48, 48, 0.775); */
   border-radius: 12px;
+  background-color: #1f1f1f63;
   padding: 15px;
   box-sizing: border-box;
+  margin-top: 5px;
 }
 
 .btn{
@@ -348,4 +351,219 @@ input{
 .checkbox{
   accent-color: white;
   cursor: pointer;
+}
+
+.nasa-page{
+  width: 100%;
+  height: 100dvh;
+  background: black;
+  color: white;
+  padding: 30px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  font-family: Arial, sans-serif;
+}
+.back-btn{
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(48, 48, 48, 0.775);
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.back-btn:hover{
+  background: #222;
+}
+
+.nasa-detail{
+  max-width: 1000px;
+  margin: 50px auto;
+}
+
+.nasa-detail-header{
+  margin-bottom: 25px;
+}
+
+.nasa-label{
+  font-family: monospace;
+  font-size: 12px;
+  opacity: 0.5;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+}
+
+.nasa-detail-header h1{
+  font-size: 42px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0 0 15px;
+}
+
+.nasa-date{
+  font-family: monospace;
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+.nasa-detail-img{
+  width: 100%;
+  max-height: 650px;
+  object-fit: contain;
+  border-radius: 16px;
+  background: #111;
+}
+
+.nasa-detail-content{
+  max-width: 800px;
+  margin-top: 35px;
+}
+
+.nasa-detail-content h2{
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.nasa-detail-content p{
+  font-size: 17px;
+  line-height: 1.8;
+  color: #bdbdbd;
+  white-space: pre-line;
+}
+
+.nasa-meta{
+  display: flex;
+  gap: 60px;
+  border-top: 1px solid rgba(48, 48, 48, 0.775);
+  border-bottom: 1px solid rgba(48, 48, 48, 0.775);
+  padding: 20px 0;
+  margin-top: 30px;
+}
+
+.nasa-meta div{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nasa-meta span{
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+.nasa-meta strong{
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.nasa-original{
+  display: inline-block;
+  color: white;
+  margin-top: 25px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.nasa-original:hover{
+  text-decoration: underline;
+}
+
+.nasa-empty{
+  text-align: center;
+  margin-top: 150px;
+}
+
+@media (max-width: 700px){
+  .nasa-page{
+    padding: 20px;
+  }
+
+  .nasa-detail{
+    margin-top: 30px;
+  }
+
+  .nasa-detail-header h1{
+    font-size: 28px;
+  }
+
+  .nasa-detail-content p{
+    font-size: 15px;
+  }
+
+  .nasa-meta{
+    gap: 30px;
+  }
+}
+
+.read-more{
+  cursor: pointer;
+}
+
+.read-more:hover{
+  text-decoration: underline;
+}
+
+.shortcut-wrapper{
+  position: relative;
+}
+
+.achievements{
+  width: 100%;
+  margin-top: 20px;
+}
+
+.achievement-list{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 15px;
+}
+
+.achievement{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  opacity: 0.3;
+  transition: 0.3s;
+}
+
+.achievement.unlocked{
+  opacity: 1;
+}
+
+.achievement i{
+  font-size: 16px;
+}
+
+.todo-items{
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.todo-items::-webkit-scrollbar{
+  width: 3px;
+}
+
+.todo-items::-webkit-scrollbar-thumb{
+  background: #333;
+}
+
+@media (max-width: 900px){
+  .container{
+    overflow-y: auto;
+  }
+
+  .browser-contaier{
+    width: 100%;
+  }
+
+  .functionable-bar{
+    width: 100%;
+  }
+
+  .Time{
+    font-size: 60px;
+  }
 }
