@@ -1,32 +1,43 @@
-# React + TypeScript + Vite
+# Orank Tab
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+![Orank Tab Banner](SS/title.png)
 
-Currently, two official plugins are available:
+Orank Tab is a clean and practical Chrome new tab page made with React.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+It has a big clock, a search bar, useful shortcuts, a todo list, and the latest astronomy discoveries from NASA. I wanted to make something simple that looks good and is actually useful every day.
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Big clock and date
+- Google search with autocomplete
+- Custom shortcuts
+- Todo list saved in local storage
+- NASA Astronomy Picture of the Day
+- NASA discovery page with more details
+- Simple achievements system
+- Dark and minimal UI
+- Responsive layout
 
-## Expanding the Oxlint configuration
+## Screenshots
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+### Home Page
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+![Home Page](SS/home.png)
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+### NASA Discoveries
+
+![NASA Discoveries](SS/nasa.png)
+
+## Built With
+
+- React
+- TypeScript
+- CSS
+- NASA API
+
+## Run Locally
+
+Clone the project and install the dependencies:
+
+```bash
+npm install
