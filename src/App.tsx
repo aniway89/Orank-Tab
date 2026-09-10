@@ -1,121 +1,61 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+// import React from 'react'
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="container flex">
+        <div className="browser-contaier flex-col ac">
+            <div className="time-and-date flex-col as">
+                <div className="date">7 Sept</div>
+                <div className="Time flex ac">
+                    12:20 AM
+                </div>
+            </div>
+            <div className="Searchbar flex ac">
+                <div className="icon"><i className="bi bi-search"></i></div> 
+                <input type="search" name="" id="" placeholder='Search' className='Searchabr'/>
+            </div>
+            <div className="news flex-col as">
+                <h2 className="title">
+                    Today's Founds
+                </h2>
+                <div className="flex ac">
+                    <div className="Nasa-news-card flex-col as">
+                        <img src="" alt="" className="nasa-news-img" />
+                        <h4 className="news-title">we discover alien.</h4>
+                        <div className="news-context">Here are all other info</div>
+                    </div>
 
-      <div className="ticks"></div>
+                    <div className="Nasa-news-card flex-col as">
+                        <img src="" alt="" className="nasa-news-img" />
+                        <h4 className="news-title">we discover alien.</h4>
+                        <div className="news-context">Here are all other info</div>
+                    </div>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+                </div>
+            </div>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+        <div className="functionable-bar flex-col ac">
+            <div className="shortcuttab">
+                <div className="flex ac bb">Shortcut <div className="EDIT btn"><i className="bi bi-pen"></i></div> <div className="Add btn"><i className="bi bi-plus-lg"></i></div></div>
+                <div className="shortcut-container flex warp">
+                    <a href="" className="shortcut">
+                        <img src="" alt="" className="shortcut-img" />
+                    </a>
+                </div>
+            </div>
+            <div className="to-do-contaier">
+                <div className="flex ac bb "><i className="bi bi-list-ul"></i> Todo list</div>
+                <div className="add-todo flex ac">
+                    <i className="bi bi-plus-lg border-dd"></i> <input type="text" name="" id="" className='Add-todo' />
+                </div>
+                <div className="todo-list flex ac cb">
+                    <input type="checkbox" name="" id="" className='checkbox' /> <div className="taskti">Dam task</div><div className="delete"> <i className="bi bi-x"></i></div>
+                </div>
+                
+            </div>
         </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    </div>
   )
 }
 
