@@ -1,6 +1,6 @@
 # Orank Tab
 
-![Orank Tab Banner](SS/title.png)
+![Orank Tab Banner](SS/ch.gif)
 
 Orank Tab is a clean and practical Chrome new tab page made with React.
 
